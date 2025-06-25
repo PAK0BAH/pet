@@ -2,89 +2,42 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {Todos} from "./api/todos.ts";
 import * as React from "react";
+import {TodoItem} from "./components/Todo.tsx";
+import {changeLimit, changePage, fetchData} from "./store/todoSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {type AppDispatch, type RootState} from "./store/store.ts";
+import {Pagination} from "./components/Paginatoin.tsx";
 
-interface ITodo {
-    "id": number,
-    "text": string,
-    "completed": boolean,
-    // "createdAt": string
-}
-
-interface ITodoProps extends ITodo{
-    handleUpd: () => {}
-}
-
-function Todo({id, text, completed, handleUpd}: ITodoProps){
-    const [textTodo, setTextTodo] = useState(text)
-    const [editButton, setEditButton] = useState(false)
-    const [completedTodo, setCompletedTodo] = useState(completed)
-
-
-    const handleEditTitle = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        if (editButton) {
-            (async () => {
-                await Todos.updTodo(id, textTodo, completed)
-            })()
-            handleUpd()
-        }
-        setEditButton(prev => !prev)
-    }
-
-    const handleChangeCompeted = async () => {
-        const newCompleted = !completedTodo;
-        setCompletedTodo(newCompleted);
-        await Todos.updTodo(id, textTodo, newCompleted);
-        handleUpd()
-    }
-
-    const handleDeleteTodo = async () => {
-        await Todos.deleteTodo(id)
-        handleUpd()
-    }
-
-    return(<div className={'Todo | flex'}>
-        <form className={'editTitle | '} onSubmit={handleEditTitle}>
-            <button>
-                {editButton ? '✔' : '✐'}
-            </button>
-            <input className={editButton ? 'border' : ''}
-                   value={textTodo}
-                   onChange={e => setTextTodo(e.target.value)}
-                   disabled={!editButton}
-            />
-        </form>
-        <input type={'checkbox'}
-               checked={completedTodo}
-               onChange={handleChangeCompeted}
-        />
-        <button onClick={handleDeleteTodo}>✖️</button>
-    </div>)
-}
-
+const limitButtons: number[] = [5, 10, 15]
 
 function App() {
-    const [todos, setTodos] = useState<ITodo[]>([])
     const [newTodoText, setNewTodoText] = useState('')
-
-    const handleUpd = async () => {
-        const res = await Todos.getTodos(1, 10)
-        const todos = await res.json()
-        setTodos(todos.data)
-    }
+    const dispatch = useDispatch<AppDispatch>()
+    const store = useSelector((state: RootState) => state.data)
+    const todos = store.todos
 
     const handleNewTodo= async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         await Todos.newTodo(newTodoText)
         setNewTodoText('')
-        handleUpd()
+        dispatch(fetchData())
     }
 
     useEffect(() => {
-        handleUpd()
+        dispatch(fetchData())
     }, []);
 
     return (<div>
+        <div className={'limit | '}>
+            limit = {store.limit}
+            {limitButtons.map((el) => (
+                <button key={el} onClick={() => {
+                    dispatch(changeLimit(el))
+                    dispatch(changePage(1))
+                    dispatch(fetchData())
+                }}>{el}</button>
+            ))}
+        </div>
         <form onSubmit={handleNewTodo}>
             <input className={'border'}
                    value={newTodoText}
@@ -92,17 +45,18 @@ function App() {
             />
             <button>new</button>
         </form>
-        <button onClick={handleUpd}>upd</button>
         <ul>
             {todos.map((t) => (
                 <li key={t.id}>
-                    <Todo id={t.id}
-                          text={t.text}
-                          completed={t.completed}
-                          handleUpd={handleUpd}/>
+                    <TodoItem
+                        id={t.id}
+                        text={t.text}
+                        completed={t.completed}
+                    />
                 </li>
             ))}
         </ul>
+        <Pagination/>
     </div>)
 }
 

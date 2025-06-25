@@ -1,5 +1,5 @@
 export class Todos {
-    static async getTodos(page: number, limit: number){
+    static async getTodos(page: number = 1, limit: number = 10){
         return await fetch(`http://localhost:3001/todos?page=${page}&limit=${limit}`)
     }
 
