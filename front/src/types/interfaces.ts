@@ -1,10 +1,24 @@
-export interface ITodo {
-    "id": number,
-    "text": string,
-    "completed": boolean,
-    // "createdAt": string
+export interface ITodoItem {
+    id: number,
+    text: string,
+    completed: boolean,
+    createdAt?: string,
 }
 
-export interface ITodoProps extends ITodo{
-    // handleUpd: () => {}
+export interface ITodoRes{
+    data: ITodoItem[],
+    total: number,
+    page: number,
+    limit: number,
+    totalPages: number,
 }
+
+export interface IState{
+    todos: ITodoItem[],
+    page: number,
+    totalPages: number,
+    limit: number,
+    status: string,
+    errors: string | null,
+}
+

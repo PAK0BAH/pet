@@ -1,20 +1,20 @@
 import './App.css'
-import {useEffect, useState} from "react";
-import {Todos} from "./api/todos.ts";
 import * as React from "react";
-import {TodoItem} from "./components/Todo.tsx";
-import {changeLimit, changePage, fetchData} from "./store/todoSlice.ts";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {type AppDispatch, type RootState} from "./store/store.ts";
+import {Todos} from "./api/todos.ts";
+import {fetchData} from "./store/todoSlice.ts";
+import {TodoItem} from "./components/TodoItem.tsx";
 import {Pagination} from "./components/Paginatoin.tsx";
+import {Limit} from "./components/Limit.tsx";
+import {type AppDispatch, type RootState} from "./store/store.ts";
+import type {ITodoItem} from "./types/interfaces.ts";
 
-const limitButtons: number[] = [5, 10, 15]
+export default function App() {
 
-function App() {
     const [newTodoText, setNewTodoText] = useState('')
     const dispatch = useDispatch<AppDispatch>()
     const store = useSelector((state: RootState) => state.data)
-    const todos = store.todos
 
     const handleNewTodo= async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -27,37 +27,28 @@ function App() {
         dispatch(fetchData())
     }, []);
 
-    return (<div>
-        <div className={'limit | '}>
-            limit = {store.limit}
-            {limitButtons.map((el) => (
-                <button key={el} onClick={() => {
-                    dispatch(changeLimit(el))
-                    dispatch(changePage(1))
-                    dispatch(fetchData())
-                }}>{el}</button>
-            ))}
-        </div>
-        <form onSubmit={handleNewTodo}>
-            <input className={'border'}
-                   value={newTodoText}
-                   onChange={e => setNewTodoText(e.target.value)}
-            />
-            <button>new</button>
-        </form>
-        <ul>
-            {todos.map((t) => (
+    return (
+        <div>
+            <p className={store.errors ? 'bg-red-500' : ''}>
+                Cтатус - {store.status}
+            </p>
+            <form onSubmit={handleNewTodo}>
+                <input className={'border'}
+                       value={newTodoText}
+                       onChange={e => setNewTodoText(e.target.value)}
+                />
+                <button>Новая задача</button>
+            </form>
+            <ul>{store.todos.map((t: ITodoItem) => (
                 <li key={t.id}>
-                    <TodoItem
-                        id={t.id}
-                        text={t.text}
-                        completed={t.completed}
+                    <TodoItem id={t.id}
+                              text={t.text}
+                              completed={t.completed}
                     />
                 </li>
-            ))}
-        </ul>
-        <Pagination/>
-    </div>)
+            ))}</ul>
+            <Limit/>
+            <Pagination/>
+        </div>
+    )
 }
-
-export default App

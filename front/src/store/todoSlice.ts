@@ -1,35 +1,23 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-// import type { PayloadAction } from '@reduxjs/toolkit';
-import type {ITodo} from "../types/interfaces.ts";
 import {Todos} from "../api/todos.ts";
 import type {RootState} from "./store.ts";
+import type {IState, ITodoRes} from "../types/interfaces.ts";
 
-type State = {
-    todos: ITodo[],
-    page: number,
-    totalPages: number,
-    limit: number,
-    status: any,
-    errors: any
-}
-
-const initialState: State = {
+const initialState: IState = {
     todos: [],
     page: 1,
     totalPages: 1,
     limit: 10,
-    status: null,
+    status: 'empty',
     errors: null
-};
+}
 
-
-export const fetchData = createAsyncThunk(
+export const fetchData = createAsyncThunk<ITodoRes, void>(
     'data/fetchData',
-    // @ts-ignore
     async (_, thunkAPI) => {
-        const state = thunkAPI.getState() as RootState;
+        const state = thunkAPI.getState() as RootState
         const res = await Todos.getTodos(state.data.page, state.data.limit)
-        const data = await res.json()
+        const data: ITodoRes = await res.json()
         return data
     }
 )
@@ -44,29 +32,22 @@ const todoSlice = createSlice({
         changeLimit(state, action){
             state.limit = action.payload
         }
-        // getTodos(state) {
-        //     state.todos
-        //     state.user = action.payload;
-        //     state.isAuth = true;
-        // },
-        // logout(state) {
-        //     state.user = null;
-        //     state.isAuth = false;
-        // },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchData.pending, (state) => {
-                state.status = 'pending'
+                state.status = 'загружается'
             })
             .addCase(fetchData.fulfilled, (state, action) => {
-                state.status = 'pending'
-                // @ts-ignore
+                state.status = 'загружено'
                 state.todos = action.payload.data
                 state.totalPages = action.payload.totalPages
+                state.errors = null
             })
             .addCase(fetchData.rejected, (state) => {
-                state.status = 'pending'
+                state.status = 'ошибка, данные не получены'
+                state.errors = 'err'
+                state.todos = []
             })
     }
 });
