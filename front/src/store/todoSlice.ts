@@ -16,9 +16,8 @@ export const fetchData = createAsyncThunk<ITodoRes, void>(
     'data/fetchData',
     async (_, thunkAPI) => {
         const state = thunkAPI.getState() as RootState
-        const res = await Todos.getTodos(state.data.page, state.data.limit)
-        const data: ITodoRes = await res.json()
-        return data
+        const res: ITodoRes = await Todos.getTodos(state.data.page, state.data.limit)
+        return res
     }
 )
 
@@ -44,9 +43,9 @@ const todoSlice = createSlice({
                 state.totalPages = action.payload.totalPages
                 state.errors = null
             })
-            .addCase(fetchData.rejected, (state) => {
-                state.status = 'ошибка, данные не получены'
-                state.errors = 'err'
+            .addCase(fetchData.rejected, (state,action) => {
+                state.status = `${action.error.message}. Данные не получены`
+                state.errors = action.error.message!
                 state.todos = []
             })
     }

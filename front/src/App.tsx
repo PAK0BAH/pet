@@ -41,10 +41,7 @@ export default function App() {
             </form>
             <ul>{store.todos.map((t: ITodoItem) => (
                 <li key={t.id}>
-                    <TodoItem id={t.id}
-                              text={t.text}
-                              completed={t.completed}
-                    />
+                    <TodoItem {...t} />
                 </li>
             ))}</ul>
             <Limit/>

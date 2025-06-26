@@ -18,8 +18,8 @@ export function TodoItem({id, text, completed}: ITodoItem){
         if (editButton) {
             (async () => {
                 await Todos.updTodo(id, textTodo, completed)
+                dispatch(fetchData())
             })()
-            dispatch(fetchData())
         }
         setEditButton(prev => !prev)
     }

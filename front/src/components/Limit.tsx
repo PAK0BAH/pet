@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {changeLimit, changePage, fetchData} from "../store/todoSlice.ts";
 import type {AppDispatch, RootState} from "../store/store.ts";
 
-const limit: number[] = [5, 10, 20]
+const limits: number[] = [5, 10, 20]
 
 export function Limit() {
 
@@ -18,7 +18,7 @@ export function Limit() {
     return (
         <div className={'limit | flex justify-between  items-center'}>
             <p>Лимит</p>
-            {limit.map((el) => (
+            {limits.map((el) => (
                 <button key={el}
                         className={store.limit === el ? 'text-green-600 ' : ''}
                         onClick={() => handleLimit(el)}
