@@ -6,6 +6,10 @@ import { fetchData } from '@/store/todoSlice';
 import type { AppDispatch } from '@/store/store';
 import type { ITodoItem } from '@/types/interfaces';
 import classNames from 'classnames';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Checkbox } from '@mui/material';
 
 export function TodoItem({ id, text, completed }: ITodoItem) {
     const [textTodo, setTextTodo] = useState(text);
@@ -14,7 +18,7 @@ export function TodoItem({ id, text, completed }: ITodoItem) {
     const dispatch = useDispatch<AppDispatch>();
 
     const editBtnStyle = classNames({
-        border: editButton,
+        'border br': editButton,
     });
 
     const handleEditTitle = (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,17 +46,19 @@ export function TodoItem({ id, text, completed }: ITodoItem) {
 
     return (
         <div className={'flex'}>
-            <form onSubmit={handleEditTitle}>
-                <button>{editButton ? '✔' : '✐'}</button>
+            <form className={'flex w-full'} onSubmit={handleEditTitle}>
+                <button className={'mr-2'}>
+                    {editButton ? <CheckRoundedIcon /> : <EditIcon />}
+                </button>
                 <input
-                    className={editBtnStyle}
+                    className={`w-full focus:outline-none rounded-full p-2 ${editBtnStyle}`}
                     value={textTodo}
                     onChange={(e) => setTextTodo(e.target.value)}
                     disabled={!editButton}
                 />
             </form>
-            <input type={'checkbox'} checked={completedTodo} onChange={handleChangeCompleted} />
-            <button onClick={handleDeleteTodo}>✖️</button>
+            <Checkbox checked={completedTodo} onChange={handleChangeCompleted}></Checkbox>
+            <button onClick={handleDeleteTodo}>{<ClearIcon />}</button>
         </div>
     );
 }

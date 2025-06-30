@@ -3,6 +3,7 @@ import type { AppDispatch, RootState } from '@/store/store';
 import { changePage, fetchData } from '@/store/todoSlice';
 import { useEffect } from 'react';
 import classNames from 'classnames';
+import { Button } from '@mui/material';
 
 export function Pagination() {
     const dispatch = useDispatch<AppDispatch>();
@@ -10,7 +11,7 @@ export function Pagination() {
 
     const activeBtnStyle = (index: number) =>
         classNames({
-            'text-green-600': store.page === index + 1,
+            green: store.page === index + 1,
         });
 
     const handleChangePage = (page: number) => {
@@ -26,12 +27,20 @@ export function Pagination() {
     }, [store.todos]);
 
     return (
-        <div className={'flex justify-between  items-center'}>
-            <p>Страницы {store.page}</p>
+        <div className={'flex justify-between  items-center mt-10'}>
             {Array.from({ length: store.totalPages }, (_, i) => (
-                <button className={activeBtnStyle(i)} key={i} onClick={() => handleChangePage(i)}>
+                <Button
+                    variant="contained"
+                    sx={{
+                        width: 30,
+                        height: 30,
+                        minWidth: '30px',
+                        bgcolor: activeBtnStyle(i),
+                    }}
+                    onClick={() => handleChangePage(i)}
+                >
                     {i + 1}
-                </button>
+                </Button>
             ))}
         </div>
     );

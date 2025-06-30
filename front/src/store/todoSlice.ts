@@ -32,17 +32,17 @@ const todoSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchData.pending, (state) => {
-                state.status = 'загружается';
+                state.status = 'Загрузка';
                 state.errors = null;
             })
             .addCase(fetchData.fulfilled, (state, action) => {
-                state.status = 'загружено';
+                state.status = 'Загружно';
                 state.todos = action.payload.data;
                 state.totalPages = action.payload.totalPages;
                 state.errors = null;
             })
             .addCase(fetchData.rejected, (state, action) => {
-                state.status = `${action.error.message}. Данные не получены`;
+                state.status = `Ошибка`;
                 state.errors = action.error.message!;
                 state.todos = [];
             });

@@ -54,7 +54,7 @@
  - [Документация RTK](https://redux-toolkit.js.org/)
 
 +отдельная ветка step3
-сделать стили библиотекой
++сделать стили библиотекой
 +pretier eslint настроить
 +classnames
 +husky
