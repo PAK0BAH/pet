@@ -37,8 +37,8 @@ export function TodoItem({id, text, completed}: ITodoItem){
     }
 
     return(
-        <div className={'Todo | flex'}>
-            <form className={'editTitle | '} onSubmit={handleEditTitle}>
+        <div className={'flex'}>
+            <form className={''} onSubmit={handleEditTitle}>
                 <button>{editButton ? '✔' : '✐'}</button>
                 <input className={editButton ? 'border' : ''}
                        value={textTodo}

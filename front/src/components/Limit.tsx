@@ -16,7 +16,7 @@ export function Limit() {
     }
 
     return (
-        <div className={'limit | flex justify-between  items-center'}>
+        <div className={'flex justify-between  items-center'}>
             <p>Лимит</p>
             {limits.map((el) => (
                 <button key={el}

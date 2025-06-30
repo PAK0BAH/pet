@@ -21,7 +21,7 @@ export function Pagination(){
     }, [store.todos])
 
     return (
-        <div className={'page |  flex justify-between  items-center'}>
+        <div className={'flex justify-between  items-center'}>
             <p>Страницы</p>
             {Array.from({length: store.totalPages}, (_, i) => (
                 <button className={store.page === i+1 ? 'text-green-600 ' : ''}

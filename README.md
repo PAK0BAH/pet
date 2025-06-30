@@ -52,3 +52,10 @@
 
  ### Ресурсы для изучения
  - [Документация RTK](https://redux-toolkit.js.org/)
+
++отдельная ветка step3
+сделать стили библиотекой
+pretier eslint настроить
+classnames
+husky
+алиасы (@)

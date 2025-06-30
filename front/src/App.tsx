@@ -39,9 +39,9 @@ export default function App() {
                 />
                 <button>Новая задача</button>
             </form>
-            <ul>{store.todos.map((t: ITodoItem) => (
-                <li key={t.id}>
-                    <TodoItem {...t} />
+            <ul>{store.todos.map((task: ITodoItem) => (
+                <li key={task.id}>
+                    <TodoItem {...task} />
                 </li>
             ))}</ul>
             <Limit/>
