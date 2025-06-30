@@ -55,7 +55,8 @@
 
 +отдельная ветка step3
 сделать стили библиотекой
-pretier eslint настроить
-classnames
-husky
-алиасы (@)
++pretier eslint настроить
++classnames
++husky
++алиасы (@)
++удалить персистор
