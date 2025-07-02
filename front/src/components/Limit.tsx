@@ -15,7 +15,7 @@ export default function Limit() {
             black: store.limit !== index,
         });
 
-    const s =
+    const x =
 
     const handleLimit = (limit: number) => {
         dispatch(changeLimit(limit));
