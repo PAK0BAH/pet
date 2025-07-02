@@ -1,29 +1,44 @@
-import {useDispatch, useSelector} from "react-redux";
-import {changeLimit, changePage, fetchData} from "../store/todoSlice.ts";
-import type {AppDispatch, RootState} from "../store/store.ts";
+import { useDispatch, useSelector } from 'react-redux';
+import { changeLimit, changePage, fetchData } from '@/store/todoSlice';
+import type { AppDispatch, RootState } from '@/store/store';
+import classNames from 'classnames';
+import { Button, Container } from '@mui/material';
+const limits: number[] = [5, 10, 15, 20];
 
-const limits: number[] = [5, 10, 20]
+export default function Limit() {
+    const dispatch = useDispatch<AppDispatch>();
+    const store = useSelector((state: RootState) => state.data);
 
-export function Limit() {
-
-    const dispatch = useDispatch<AppDispatch>()
-    const store = useSelector((state: RootState) => state.data)
+    const activeBtnStyle = (index: number) =>
+        classNames({
+            green: store.limit === index,
+            black: store.limit !== index,
+        });
 
     const handleLimit = (limit: number) => {
-        dispatch(changeLimit(limit))
-        dispatch(changePage(1))
-        dispatch(fetchData())
-    }
+        dispatch(changeLimit(limit));
+        dispatch(changePage(1));
+        dispatch(fetchData());
+    };
 
     return (
-        <div className={'limit | flex justify-between  items-center'}>
-            <p>Лимит</p>
+        <Container className={'flex justify-between m-5 mt-10'}>
             {limits.map((el) => (
-                <button key={el}
-                        className={store.limit === el ? 'text-green-600 ' : ''}
-                        onClick={() => handleLimit(el)}
-                >{el}</button>
+                <Button
+                    key={el}
+                    variant="outlined"
+                    sx={{
+                        width: 30,
+                        height: 30,
+                        minWidth: '30px',
+                        color: activeBtnStyle(el),
+                        borderColor: 'black',
+                    }}
+                    onClick={() => handleLimit(el)}
+                >
+                    {el}
+                </Button>
             ))}
-        </div>
-    )
+        </Container>
+    );
 }
