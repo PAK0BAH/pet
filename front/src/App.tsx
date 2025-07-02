@@ -3,14 +3,12 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Todos } from '@/api/todos';
-import { fetchData } from '@/store/todoSlice';
-import { TodoItem } from '@/components/TodoItem';
-import { Pagination } from '@/components/Paginatoin';
-import { Limit } from '@/components/Limit.tsx';
+import { changePage, fetchData } from '@/store/todoSlice';
 import { type AppDispatch, type RootState } from '@/store/store';
 import type { ITodoItem } from '@/types/interfaces';
-import Status from '@/components/Status.tsx';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, Stack, TextField } from '@mui/material';
+import { TodoItem, Pagination, Limit, Status } from '@/components/';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function App() {
     const [newTodoText, setNewTodoText] = useState('');
@@ -20,7 +18,8 @@ export default function App() {
     const handleNewTodo = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await Todos.newTodo(newTodoText);
-        setNewTodoText('');
+        // setNewTodoText('');
+        dispatch(changePage(1));
         dispatch(fetchData());
     };
 
@@ -29,11 +28,12 @@ export default function App() {
     }, []);
 
     return (
-        <div className={'flex justify-center '}>
-            <div className={'w-[400px]'}>
+        <Box className={'flex justify-center '}>
+            <Box className={'w-[400px]'}>
                 <Status />
                 <Limit />
-                <form
+                <Box
+                    component="form"
                     className={'mt-5 ml-10 mb-5 mr-2 flex justify-center space-x-3'}
                     onSubmit={handleNewTodo}
                 >
@@ -46,27 +46,28 @@ export default function App() {
                         onChange={(e) => setNewTodoText(e.target.value)}
                     />
                     <Button
-                        variant="contained"
+                        type="submit"
+                        variant="outlined"
                         sx={{
                             width: 30,
                             height: 30,
                             minWidth: '30px',
                             m: 1,
                             ml: 3,
+                            color: 'black',
+                            border: 'none',
                         }}
                     >
-                        +
+                        <AddIcon></AddIcon>
                     </Button>
-                </form>
-                <ul className={'w-full'}>
+                </Box>
+                <Stack spacing={1}>
                     {store.todos.map((task: ITodoItem) => (
-                        <li key={task.id}>
-                            <TodoItem {...task} />
-                        </li>
+                        <TodoItem key={task.id} {...task} />
                     ))}
-                </ul>
+                </Stack>
                 <Pagination />
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 }

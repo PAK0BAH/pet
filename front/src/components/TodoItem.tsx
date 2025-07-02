@@ -9,9 +9,9 @@ import classNames from 'classnames';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Checkbox } from '@mui/material';
+import { Box, Button, Checkbox, Container } from '@mui/material';
 
-export function TodoItem({ id, text, completed }: ITodoItem) {
+export default function TodoItem({ id, text, completed }: ITodoItem) {
     const [textTodo, setTextTodo] = useState(text);
     const [editButton, setEditButton] = useState(false);
     const [completedTodo, setCompletedTodo] = useState(completed);
@@ -19,6 +19,7 @@ export function TodoItem({ id, text, completed }: ITodoItem) {
 
     const editBtnStyle = classNames({
         'border br': editButton,
+        'line-through': completedTodo,
     });
 
     const handleEditTitle = (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,20 +46,39 @@ export function TodoItem({ id, text, completed }: ITodoItem) {
     };
 
     return (
-        <div className={'flex'}>
-            <form className={'flex w-full'} onSubmit={handleEditTitle}>
-                <button className={'mr-2'}>
+        <Container disableGutters className={'flex gap-2'}>
+            <Box component="form" className={'flex gap-2 flex-1'} onSubmit={handleEditTitle}>
+                <Button
+                    type="submit"
+                    size="small"
+                    sx={{ borderRadius: 99, width: 40, minWidth: 40, height: 40, color: 'black' }}
+                >
                     {editButton ? <CheckRoundedIcon /> : <EditIcon />}
-                </button>
+                </Button>
                 <input
-                    className={`w-full focus:outline-none rounded-full p-2 ${editBtnStyle}`}
+                    className={`focus:outline-none rounded-full flex-1 px-2 ${editBtnStyle}`}
                     value={textTodo}
                     onChange={(e) => setTextTodo(e.target.value)}
                     disabled={!editButton}
                 />
-            </form>
-            <Checkbox checked={completedTodo} onChange={handleChangeCompleted}></Checkbox>
-            <button onClick={handleDeleteTodo}>{<ClearIcon />}</button>
-        </div>
+            </Box>
+            <Checkbox
+                checked={completedTodo}
+                onChange={handleChangeCompleted}
+                sx={{
+                    color: 'black',
+                    '&.Mui-checked': {
+                        color: 'black',
+                    },
+                }}
+            ></Checkbox>
+            <Button
+                onClick={handleDeleteTodo}
+                size="small"
+                sx={{ borderRadius: 99, width: 40, minWidth: 40, height: 40, color: 'black' }}
+            >
+                {<ClearIcon />}
+            </Button>
+        </Container>
     );
 }

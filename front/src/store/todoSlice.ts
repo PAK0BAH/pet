@@ -7,7 +7,7 @@ const initialState: IState = {
     todos: [],
     page: 1,
     totalPages: 1,
-    limit: 10,
+    limit: 5,
     status: 'empty',
     errors: null,
 };

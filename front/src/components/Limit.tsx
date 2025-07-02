@@ -2,17 +2,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeLimit, changePage, fetchData } from '@/store/todoSlice';
 import type { AppDispatch, RootState } from '@/store/store';
 import classNames from 'classnames';
-import { Button } from '@mui/material';
+import { Button, Container } from '@mui/material';
 const limits: number[] = [5, 10, 15, 20];
 
-export function Limit() {
+export default function Limit() {
     const dispatch = useDispatch<AppDispatch>();
     const store = useSelector((state: RootState) => state.data);
 
     const activeBtnStyle = (index: number) =>
         classNames({
             green: store.limit === index,
-            // '#6a1b9a': !(store.limit === index),
+            black: store.limit !== index,
         });
 
     const handleLimit = (limit: number) => {
@@ -22,21 +22,23 @@ export function Limit() {
     };
 
     return (
-        <div className={'flex justify-between  items-center m-5'}>
+        <Container className={'flex justify-between m-5 mt-10'}>
             {limits.map((el) => (
                 <Button
-                    variant="contained"
+                    key={el}
+                    variant="outlined"
                     sx={{
                         width: 30,
                         height: 30,
                         minWidth: '30px',
-                        bgcolor: activeBtnStyle(el),
+                        color: activeBtnStyle(el),
+                        borderColor: 'black',
                     }}
                     onClick={() => handleLimit(el)}
                 >
                     {el}
                 </Button>
             ))}
-        </div>
+        </Container>
     );
 }
