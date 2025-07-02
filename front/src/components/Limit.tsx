@@ -15,13 +15,10 @@ export default function Limit() {
             black: store.limit !== index,
         });
 
-    const test 9000
-
     const handleLimit = (limit: number) => {
         dispatch(changeLimit(limit));
         dispatch(changePage(1));
         dispatch(fetchData());
-        console.log(test);
     };
 
     return (
