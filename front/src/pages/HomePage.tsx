@@ -9,8 +9,7 @@ import type { ITodoItem } from '@/types/interfaces';
 import { Box, Button, Stack, TextField } from '@mui/material';
 import { TodoItem, Pagination, Limit, Status } from '@/components/';
 import AddIcon from '@mui/icons-material/Add';
-import { logout, setToken } from '../store/authSlice';
-import { Navigate } from 'react-router-dom';
+import { setToken } from '../store/authSlice';
 import { Users } from '../api/users';
 
 export default function HomePage() {
@@ -18,7 +17,6 @@ export default function HomePage() {
     const dispatch = useDispatch<AppDispatch>();
     const store = useSelector((state: RootState) => state.data);
     const assetsToken = useSelector((state: RootState) => state.userData.accessToken);
-    const [logoutState, setLogoutState] = useState(false);
 
     const handleNewTodo = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -34,20 +32,12 @@ export default function HomePage() {
         dispatch(fetchData());
     };
 
-    const handleLogout = () => {
-        dispatch(logout());
-        localStorage.clear();
-        setLogoutState(true);
-    };
-
     useEffect(() => {
         dispatch(fetchData());
     }, [assetsToken]);
 
     return (
         <>
-            {logoutState && <Navigate to="/login" />}
-
             <Box className={'flex justify-center '}>
                 <Box className={'w-[400px]'}>
                     <Status />
@@ -89,7 +79,6 @@ export default function HomePage() {
                     <Pagination />
                 </Box>
             </Box>
-            <button onClick={handleLogout}>logout</button>
         </>
     );
 }

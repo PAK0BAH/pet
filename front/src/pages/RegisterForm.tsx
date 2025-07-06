@@ -3,6 +3,7 @@ import { Users } from '../api/users';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../store/store';
 import { setToken } from '../store/authSlice';
+import { Navigate } from 'react-router-dom';
 
 export function RegisterForm() {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export function RegisterForm() {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [age, setAge] = useState('');
     const dispatch = useDispatch<AppDispatch>();
+    const [isAuth, setIsAuth] = useState(false);
 
     const HandleRegister = async () => {
         const num = Number(age);
@@ -19,6 +21,7 @@ export function RegisterForm() {
             console.log('Register', res);
             dispatch(setToken(res.accessToken));
             localStorage.refreshToken = res.refreshToken;
+            setIsAuth(true);
         } catch (error) {
             console.log(error);
         }
@@ -26,6 +29,7 @@ export function RegisterForm() {
 
     return (
         <>
+            {isAuth && <Navigate to="/" />}
             <input
                 className={'border'}
                 type="email"

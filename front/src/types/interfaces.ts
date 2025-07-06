@@ -29,6 +29,7 @@ export interface IUser {
     email: string;
     age: number;
     createdAt: string;
+    error?: string;
 }
 
 export interface IStateUser {
@@ -36,6 +37,7 @@ export interface IStateUser {
         id: number;
         email: string;
         age?: number;
+        createdAt: string;
     } | null;
     accessToken: string | null;
     status: 'idle' | 'loading' | 'failed';

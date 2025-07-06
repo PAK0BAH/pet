@@ -40,7 +40,7 @@ export class Users {
     }
 
     static async changePassword(assetsToken: string, oldPassword: string, newPassword: string) {
-        const res = await fetch('http://localhost:3001/auth/me', {
+        const res = await fetch('http://localhost:3001/auth/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
