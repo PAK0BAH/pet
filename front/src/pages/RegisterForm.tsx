@@ -4,58 +4,33 @@ import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../store/store';
 import { setToken } from '../store/authSlice';
 import { Navigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaRegister } from '../yup/schemes';
+import type { IRegister } from '../types/froms';
 
 export function RegisterForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [age, setAge] = useState('');
     const dispatch = useDispatch<AppDispatch>();
     const [isAuth, setIsAuth] = useState(false);
+    const { register, handleSubmit } = useForm({ resolver: yupResolver(schemaRegister) });
 
-    const HandleRegister = async () => {
-        const num = Number(age);
-        const ageToNum = isNaN(num) ? null : num;
-        try {
-            const res = await Users.register(email, password, ageToNum);
-            console.log('Register', res);
-            dispatch(setToken(res.accessToken));
-            localStorage.refreshToken = res.refreshToken;
-            setIsAuth(true);
-        } catch (error) {
-            console.log(error);
-        }
+    const handleRegister = async (data: IRegister) => {
+        const res = await Users.register(data.email, data.password, data.age!);
+        dispatch(setToken(res.accessToken));
+        localStorage.refreshToken = res.refreshToken;
+        setIsAuth(true);
     };
 
     return (
         <>
+            <form onSubmit={handleSubmit(handleRegister)}>
+                <input {...register('email')} className={'border'} type="email" />
+                <input {...register('password')} className={'border'} type="password" />
+                <input {...register('passwordConfirm')} className={'border'} type="password" />
+                <input {...register('age')} className={'border'} />
+                <button className={'border'}>register</button>
+            </form>
             {isAuth && <Navigate to="/" />}
-            <input
-                className={'border'}
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <input
-                className={'border'}
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-            />
-            <input
-                className={'border'}
-                type="password"
-                value={passwordConfirm}
-                onChange={(event) => setPasswordConfirm(event.target.value)}
-            />
-            <input
-                className={'border'}
-                value={age}
-                onChange={(event) => setAge(event.target.value)}
-            />
-            <button className={'border'} onClick={HandleRegister}>
-                Register
-            </button>
         </>
     );
 }

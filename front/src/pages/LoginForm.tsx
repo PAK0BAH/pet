@@ -4,16 +4,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store/store';
 import { setToken } from '../store/authSlice';
 import { Navigate } from 'react-router-dom';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import type { ILogin } from '../types/froms';
+import { schemaLogin } from '../yup/schemes';
 
 export function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [isAuth, setIsAuth] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const store = useSelector((state: RootState) => state);
+    const { register, handleSubmit } = useForm({ resolver: yupResolver(schemaLogin) });
 
-    const HandleLogin = async () => {
-        const res = await Users.login(email, password);
+    const handleLogin = async (data: ILogin) => {
+        const res = await Users.login(data.email, data.password);
         dispatch(setToken(res.accessToken));
         localStorage.refreshToken = res.refreshToken;
     };
@@ -26,25 +30,18 @@ export function LoginForm() {
 
     return (
         <>
-            {isAuth && <Navigate to="/" />}
-            <button className={'border'} onClick={() => console.log(store.userData.accessToken)}>
-                +
-            </button>
-            <input
-                className={'border'}
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <input
-                className={'border'}
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-            />
-            <button className={'border'} onClick={HandleLogin}>
-                login
-            </button>
+            <form onSubmit={handleSubmit(handleLogin)}>
+                {isAuth && <Navigate to="/" />}
+                <button
+                    className={'border'}
+                    onClick={() => console.log(store.userData.accessToken)}
+                >
+                    +
+                </button>
+                <input {...register('email')} className={'border'} />
+                <input {...register('password')} className={'border'} type="password" />
+                <button className={'border'}>login</button>
+            </form>
         </>
     );
 }

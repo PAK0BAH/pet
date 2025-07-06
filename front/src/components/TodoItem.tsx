@@ -13,29 +13,34 @@ import { Box, Button, Checkbox, Container } from '@mui/material';
 import type { RootState } from '../store/store';
 import { Users } from '../api/users';
 import { setToken } from '../store/authSlice';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaTodoText } from '../yup/schemes';
 
 export default function TodoItem({ id, text, completed }: ITodoItem) {
-    const [textTodo, setTextTodo] = useState(text);
     const [editButton, setEditButton] = useState(false);
     const [completedTodo, setCompletedTodo] = useState(completed);
     const dispatch = useDispatch<AppDispatch>();
     const accessToken = useSelector((state: RootState) => state.userData.accessToken);
+    const { register, handleSubmit, getValues } = useForm({
+        defaultValues: { todoText: text },
+        resolver: yupResolver(schemaTodoText),
+    });
 
     const editBtnStyle = classNames({
         'border br': editButton,
         'line-through': completedTodo,
     });
 
-    const handleEditTitle = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleEditTitle = (data: { todoText: string }) => {
         if (editButton) {
             (async () => {
-                const res = await Todos.updTodo(accessToken!, id, textTodo, completed);
+                const res = await Todos.updTodo(accessToken!, id, data.todoText, completed);
                 if (res.error) {
                     const tokens = await Users.refresh(localStorage.refreshToken);
                     localStorage.refreshToken = tokens.refreshToken;
                     dispatch(setToken(tokens.accessToken));
-                    await Todos.updTodo(tokens.accessToken, id, textTodo, completed);
+                    await Todos.updTodo(tokens.accessToken, id, data.todoText, completed);
                 }
                 dispatch(fetchData());
             })();
@@ -46,12 +51,12 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
     const handleChangeCompleted = async () => {
         const newCompleted = !completedTodo;
         setCompletedTodo(newCompleted);
-        const res = await Todos.updTodo(accessToken!, id, textTodo, completed);
+        const res = await Todos.updTodo(accessToken!, id, getValues('todoText'), newCompleted);
         if (res.error) {
             const tokens = await Users.refresh(localStorage.refreshToken);
             localStorage.refreshToken = tokens.refreshToken;
             dispatch(setToken(tokens.accessToken));
-            await Todos.updTodo(tokens.accessToken, id, textTodo, newCompleted);
+            await Todos.updTodo(tokens.accessToken, id, getValues('todoText'), newCompleted);
         }
         dispatch(fetchData());
     };
@@ -69,7 +74,11 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
 
     return (
         <Container disableGutters className={'flex gap-2'}>
-            <Box component="form" className={'flex gap-2 flex-1'} onSubmit={handleEditTitle}>
+            <Box
+                component="form"
+                className={'flex gap-2 flex-1'}
+                onSubmit={handleSubmit(handleEditTitle)}
+            >
                 <Button
                     type="submit"
                     size="small"
@@ -78,9 +87,8 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
                     {editButton ? <CheckRoundedIcon /> : <EditIcon />}
                 </Button>
                 <input
+                    {...register('todoText')}
                     className={`focus:outline-none rounded-full flex-1 px-2 ${editBtnStyle}`}
-                    value={textTodo}
-                    onChange={(e) => setTextTodo(e.target.value)}
                     disabled={!editButton}
                 />
             </Box>

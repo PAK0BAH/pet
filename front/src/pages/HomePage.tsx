@@ -1,6 +1,6 @@
 import '../App.css';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Todos } from '@/api/todos';
 import { changePage, fetchData } from '@/store/todoSlice';
@@ -11,30 +11,32 @@ import { TodoItem, Pagination, Limit, Status } from '@/components/';
 import AddIcon from '@mui/icons-material/Add';
 import { setToken } from '../store/authSlice';
 import { Users } from '../api/users';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaTodoText } from '../yup/schemes';
 
 export default function HomePage() {
-    const [newTodoText, setNewTodoText] = useState('');
     const dispatch = useDispatch<AppDispatch>();
     const store = useSelector((state: RootState) => state.data);
     const assetsToken = useSelector((state: RootState) => state.userData.accessToken);
+    const { register, handleSubmit, reset } = useForm({ resolver: yupResolver(schemaTodoText) });
 
-    const handleNewTodo = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const res = await Todos.newTodo(assetsToken!, newTodoText);
+    const handleNewTodo = async (data: { todoText: string }) => {
+        const res = await Todos.newTodo(assetsToken!, data.todoText);
         if (res.error) {
             const tokens = await Users.refresh(localStorage.refreshToken);
             localStorage.refreshToken = tokens.refreshToken;
             dispatch(setToken(tokens.accessToken));
-            await Todos.newTodo(tokens.accessToken, newTodoText);
+            await Todos.newTodo(tokens.accessToken, data.todoText);
         }
-        setNewTodoText('');
+        reset();
         dispatch(changePage(1));
         dispatch(fetchData());
     };
 
     useEffect(() => {
         dispatch(fetchData());
-    }, [assetsToken]);
+    }, [assetsToken, dispatch]);
 
     return (
         <>
@@ -45,15 +47,14 @@ export default function HomePage() {
                     <Box
                         component="form"
                         className={'mt-5 ml-10 mb-5 mr-2 flex justify-center space-x-3'}
-                        onSubmit={handleNewTodo}
+                        onSubmit={handleSubmit(handleNewTodo)}
                     >
                         <TextField
                             sx={{ width: 500 }}
                             id="standard-basic"
                             label="Новая задача"
                             variant="standard"
-                            value={newTodoText}
-                            onChange={(e) => setNewTodoText(e.target.value)}
+                            {...register('todoText')}
                         />
                         <Button
                             type="submit"
