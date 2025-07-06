@@ -3,6 +3,7 @@ export interface ITodoItem {
     text: string;
     completed: boolean;
     createdAt?: string;
+    userId: number;
 }
 
 export interface ITodoRes {
@@ -11,13 +12,31 @@ export interface ITodoRes {
     page: number;
     limit: number;
     totalPages: number;
+    error?: string;
 }
 
-export interface IState {
+export interface IStateTodo {
     todos: ITodoItem[];
     page: number;
     totalPages: number;
     limit: number;
     status: string;
     errors: string | null;
+}
+
+export interface IUser {
+    id: number;
+    email: string;
+    age: number;
+    createdAt: string;
+}
+
+export interface IStateUser {
+    user: {
+        id: number;
+        email: string;
+        age?: number;
+    } | null;
+    accessToken: string | null;
+    status: 'idle' | 'loading' | 'failed';
 }

@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1751537930969,
+    "email": "user@example.com",
+    "password": "$2a$10$K51TxtHX5CHHU37rxuEGBuOzUcGL0k0XshyYP/HmhA9PrnseJz/NS",
+    "age": 25,
+    "createdAt": "2025-07-03T10:18:50.970Z"
+  },
+  {
+    "id": 1751539255999,
+    "email": "user2@example.com",
+    "password": "$2a$10$IxCteNTwYyDE.fNws3Uez.2JOCJ.Vn3ox3Cf7a/nj9MYhd8DE3II.",
+    "age": null,
+    "createdAt": "2025-07-03T10:40:55.999Z"
+  },
+  {
+    "id": 1751554196821,
+    "email": "123@email",
+    "password": "$2a$10$DX0s8ee7bA5Y05h/FHOzruoq1UGKoE0oHYBN5GD/TDPgtW.Nbv44a",
+    "age": null,
+    "createdAt": "2025-07-03T14:49:56.821Z"
+  },
+  {
+    "id": 1751555215682,
+    "email": "щщщщщ@sad",
+    "password": "$2a$10$Hv4/fd3ML5H/GdqJOxH6xO2GxM7WEYiTDzpUqMdOmQoj.zPhL09nO",
+    "age": null,
+    "createdAt": "2025-07-03T15:06:55.682Z"
+  },
+  {
+    "id": 1751556163612,
+    "email": "123",
+    "password": "$2a$10$QejfGttYgiA0SLHf5iRRp.vVrG3YZnvuJvckMcaQSSowULrFY2TOW",
+    "age": 2,
+    "createdAt": "2025-07-03T15:22:43.612Z"
+  },
+  {
+    "id": 1751559734360,
+    "email": "321",
+    "password": "$2a$10$PeUfF7lK0uPLabb99dNK7unXEFbOycsDrnd139SjxLvMpdsKu5FcG",
+    "age": null,
+    "createdAt": "2025-07-03T16:22:14.360Z"
+  }
+]

@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Todos } from '../api/todos.ts';
 import type { RootState } from './store.ts';
-import type { IState, ITodoRes } from '../types/interfaces.ts';
+import type { IStateTodo, ITodoRes } from '../types/interfaces.ts';
+import { Users } from '../api/users';
+import { setToken } from './authSlice';
 
-const initialState: IState = {
+const initialState: IStateTodo = {
     todos: [],
     page: 1,
     totalPages: 1,
@@ -14,7 +16,19 @@ const initialState: IState = {
 
 export const fetchData = createAsyncThunk<ITodoRes, void>('data/fetchData', async (_, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
-    const res: ITodoRes = await Todos.getTodos(state.data.page, state.data.limit);
+    const res = await Todos.getTodos(
+        state.userData.accessToken!,
+        state.data.page,
+        state.data.limit,
+    );
+    if (res.error) {
+        const tokens = await Users.refresh(localStorage.refreshToken);
+        thunkAPI.dispatch(setToken(tokens.accessToken));
+        localStorage.refreshToken = tokens.refreshToken;
+        const todos = await Todos.getTodos(tokens.accessToken, state.data.page, state.data.limit);
+        if (todos.error) throw new Error(res.error);
+        return todos;
+    }
     return res;
 });
 
@@ -41,9 +55,9 @@ const todoSlice = createSlice({
                 state.totalPages = action.payload.totalPages;
                 state.errors = null;
             })
-            .addCase(fetchData.rejected, (state, action) => {
+            .addCase(fetchData.rejected, (state) => {
                 state.status = `Ошибка`;
-                state.errors = action.error.message!;
+                state.errors = 'null';
                 state.todos = [];
             });
     },

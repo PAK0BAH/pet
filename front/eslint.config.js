@@ -8,6 +8,7 @@ import { globalIgnores } from 'eslint/config';
 export default tseslint.config([
     globalIgnores(['dist']),
     {
+        ignores: ['node_modules', 'dist', 'build'],
         files: ['**/*.{ts,tsx}'],
         extends: [
             js.configs.recommended,

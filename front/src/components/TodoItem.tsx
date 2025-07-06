@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Todos } from '@/api/todos';
 import { fetchData } from '@/store/todoSlice';
 import type { AppDispatch } from '@/store/store';
@@ -10,12 +10,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Button, Checkbox, Container } from '@mui/material';
+import type { RootState } from '../store/store';
+import { Users } from '../api/users';
+import { setToken } from '../store/authSlice';
 
 export default function TodoItem({ id, text, completed }: ITodoItem) {
     const [textTodo, setTextTodo] = useState(text);
     const [editButton, setEditButton] = useState(false);
     const [completedTodo, setCompletedTodo] = useState(completed);
     const dispatch = useDispatch<AppDispatch>();
+    const accessToken = useSelector((state: RootState) => state.userData.accessToken);
 
     const editBtnStyle = classNames({
         'border br': editButton,
@@ -26,7 +30,13 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
         e.preventDefault();
         if (editButton) {
             (async () => {
-                await Todos.updTodo(id, textTodo, completed);
+                const res = await Todos.updTodo(accessToken!, id, textTodo, completed);
+                if (res.error) {
+                    const tokens = await Users.refresh(localStorage.refreshToken);
+                    localStorage.refreshToken = tokens.refreshToken;
+                    dispatch(setToken(tokens.accessToken));
+                    await Todos.updTodo(tokens.accessToken, id, textTodo, completed);
+                }
                 dispatch(fetchData());
             })();
         }
@@ -36,12 +46,24 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
     const handleChangeCompleted = async () => {
         const newCompleted = !completedTodo;
         setCompletedTodo(newCompleted);
-        await Todos.updTodo(id, textTodo, newCompleted);
+        const res = await Todos.updTodo(accessToken!, id, textTodo, completed);
+        if (res.error) {
+            const tokens = await Users.refresh(localStorage.refreshToken);
+            localStorage.refreshToken = tokens.refreshToken;
+            dispatch(setToken(tokens.accessToken));
+            await Todos.updTodo(tokens.accessToken, id, textTodo, newCompleted);
+        }
         dispatch(fetchData());
     };
 
     const handleDeleteTodo = async () => {
-        await Todos.deleteTodo(id);
+        const res = await Todos.deleteTodo(accessToken!, id);
+        if (res.error) {
+            const tokens = await Users.refresh(localStorage.refreshToken);
+            localStorage.refreshToken = tokens.refreshToken;
+            dispatch(setToken(tokens.accessToken));
+            await Todos.deleteTodo(tokens.accessToken, id);
+        }
         dispatch(fetchData());
     };
 
