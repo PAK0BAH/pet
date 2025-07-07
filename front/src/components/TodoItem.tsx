@@ -11,8 +11,6 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Button, Checkbox, Container } from '@mui/material';
 import type { RootState } from '../store/store';
-import { Users } from '../api/users';
-import { setToken } from '../store/authSlice';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schemaTodoText } from '../yup/schemes';
@@ -34,13 +32,7 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
 
     const handleEditTitle = async (data: { todoText: string }) => {
         if (editButton) {
-            const res = await Todos.updTodo(accessToken!, id, data.todoText, completed);
-            if (res.error) {
-                const tokens = await Users.refresh(localStorage.refreshToken);
-                localStorage.refreshToken = tokens.refreshToken;
-                dispatch(setToken(tokens.accessToken));
-                await Todos.updTodo(tokens.accessToken, id, data.todoText, completed);
-            }
+            await Todos.updTodo(accessToken!, id, data.todoText, completed);
             dispatch(fetchData());
         }
         setEditButton((prev) => !prev);
@@ -49,24 +41,12 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
     const handleChangeCompleted = async () => {
         const newCompleted = !completedTodo;
         setCompletedTodo(newCompleted);
-        const res = await Todos.updTodo(accessToken!, id, getValues('todoText'), newCompleted);
-        if (res.error) {
-            const tokens = await Users.refresh(localStorage.refreshToken);
-            localStorage.refreshToken = tokens.refreshToken;
-            dispatch(setToken(tokens.accessToken));
-            await Todos.updTodo(tokens.accessToken, id, getValues('todoText'), newCompleted);
-        }
+        await Todos.updTodo(accessToken!, id, getValues('todoText'), newCompleted);
         dispatch(fetchData());
     };
 
     const handleDeleteTodo = async () => {
-        const res = await Todos.deleteTodo(accessToken!, id);
-        if (res.error) {
-            const tokens = await Users.refresh(localStorage.refreshToken);
-            localStorage.refreshToken = tokens.refreshToken;
-            dispatch(setToken(tokens.accessToken));
-            await Todos.deleteTodo(tokens.accessToken, id);
-        }
+        await Todos.deleteTodo(accessToken!, id);
         dispatch(fetchData());
     };
 

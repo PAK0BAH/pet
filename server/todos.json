@@ -1,30 +1,9 @@
 [
   {
-    "id": 1751883360432,
-    "text": "1231",
-    "completed": false,
-    "createdAt": "2025-07-07T10:16:00.432Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751883357010,
-    "text": "wr rrk",
-    "completed": false,
-    "createdAt": "2025-07-07T10:15:57.010Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751871424352,
-    "text": "5-9",
-    "completed": false,
-    "createdAt": "2025-07-07T06:57:04.352Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751871418248,
-    "text": "2",
-    "completed": false,
-    "createdAt": "2025-07-07T06:56:58.248Z",
+    "id": 1751894985716,
+    "text": "321313",
+    "completed": true,
+    "createdAt": "2025-07-07T13:29:45.716Z",
     "userId": 1751556163612
   },
   {
@@ -42,44 +21,9 @@
     "userId": 1751802104125
   },
   {
-    "id": 1751616294025,
-    "text": "7",
-    "completed": false,
-    "createdAt": "2025-07-04T08:04:54.025Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751616292836,
-    "text": "6",
-    "completed": true,
-    "createdAt": "2025-07-04T08:04:52.836Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751616291754,
-    "text": "3",
-    "completed": true,
-    "createdAt": "2025-07-04T08:04:51.754Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751615513970,
-    "text": "2",
-    "completed": false,
-    "createdAt": "2025-07-04T07:51:53.970Z",
-    "userId": 1751556163612
-  },
-  {
-    "id": 1751615032627,
-    "text": "1",
-    "completed": false,
-    "createdAt": "2025-07-04T07:43:52.627Z",
-    "userId": 1751556163612
-  },
-  {
     "id": 1751615031775,
     "text": "b",
-    "completed": false,
+    "completed": true,
     "createdAt": "2025-07-04T07:43:51.775Z",
     "userId": 1751556163612
   },
@@ -93,7 +37,7 @@
   {
     "id": 1751613108656,
     "text": "3",
-    "completed": false,
+    "completed": true,
     "createdAt": "2025-07-04T07:11:48.656Z",
     "userId": 1751556163612
   },

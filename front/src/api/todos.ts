@@ -1,50 +1,55 @@
-import type { ITodoRes } from '../types/interfaces.ts';
+import { cleanTodos } from './cleanTodos';
+import type { ITodoRes } from '../types/interfaces';
+import { Users } from './users';
+import { setToken } from '../store/authSlice';
+import { store } from '../store/store';
 
-export class Todos {
+export class Todos extends cleanTodos {
     static async getTodos(
         accessToken: string,
         page: number = 1,
         limit: number = 10,
     ): Promise<ITodoRes> {
-        const res = await fetch(`http://localhost:3001/todos?page=${page}&limit=${limit}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        return res.json();
+        const res = await super.getTodos(accessToken, page, limit);
+        if (res.error) {
+            const tokens = await Users.refresh(localStorage.refreshToken);
+            localStorage.refreshToken = tokens.refreshToken;
+            store.dispatch(setToken(tokens.accessToken));
+            return await super.getTodos(tokens.accessToken, page, limit);
+        }
+        return res;
     }
 
     static async newTodo(accessToken: string, text: string) {
-        const res = await fetch(`http://localhost:3001/todos`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({ text: text }),
-        });
-        return res.json();
+        const res = await super.newTodo(accessToken, text);
+        if (res.error) {
+            const tokens = await Users.refresh(localStorage.refreshToken);
+            localStorage.refreshToken = tokens.refreshToken;
+            store.dispatch(setToken(tokens.accessToken));
+            return await super.newTodo(tokens.accessToken, text);
+        }
+        return res;
     }
 
     static async updTodo(accessToken: string, id: number, text: string, completed: boolean) {
-        const res = await fetch(`http://localhost:3001/todos/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({ text: text, completed: completed }),
-        });
-        return res.json();
+        const res = await super.updTodo(accessToken, id, text, completed);
+        if (res.error) {
+            const tokens = await Users.refresh(localStorage.refreshToken);
+            localStorage.refreshToken = tokens.refreshToken;
+            store.dispatch(setToken(tokens.accessToken));
+            return await super.updTodo(tokens.accessToken, id, text, completed);
+        }
+        return res;
     }
 
     static async deleteTodo(accessToken: string, id: number) {
-        const res = await fetch(`http://localhost:3001/todos/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-        return res.json();
+        const res = await super.deleteTodo(accessToken, id);
+        if (res.error) {
+            const tokens = await Users.refresh(localStorage.refreshToken);
+            localStorage.refreshToken = tokens.refreshToken;
+            store.dispatch(setToken(tokens.accessToken));
+            return await super.deleteTodo(tokens.accessToken, id);
+        }
+        return res;
     }
 }
