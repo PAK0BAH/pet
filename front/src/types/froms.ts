@@ -1,6 +1,6 @@
 export interface ILogin {
-    email: string;
-    password: string;
+    email?: string;
+    password?: string;
 }
 
 export interface IRegister {
@@ -13,5 +13,5 @@ export interface IRegister {
 export interface IChangePass {
     oldPassword: string;
     newPassword: string;
-    passwordConfirm: string;
+    confPassword: string;
 }

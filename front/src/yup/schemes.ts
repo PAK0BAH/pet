@@ -1,14 +1,14 @@
 import * as yup from 'yup';
 
 export const schemaLogin = yup.object().shape({
-    email: yup.string().trim().required(),
-    password: yup.string().required(),
+    email: yup.string().trim(),
+    password: yup.string(),
 });
 
 export const schemaRegister = yup.object().shape({
-    email: yup.string().trim().required(),
-    password: yup.string().required().min(1),
-    passwordConfirm: yup.string().required(),
+    email: yup.string().email('Email должен быть корректным').required('ВВедите email').trim(),
+    password: yup.string().required('Создайте Пароль').min(6, 'Минимум 6 символов'),
+    passwordConfirm: yup.string().required('Обязательное поле'),
     age: yup
         .number()
         .transform((value, originalValue) => (originalValue === '' ? null : value))
@@ -21,7 +21,7 @@ export const schemaTodoText = yup.object().shape({
 });
 
 export const schemaChangePass = yup.object().shape({
-    oldPassword: yup.string().required(),
-    newPassword: yup.string().required().min(1),
-    passwordConfirm: yup.string().required(),
+    oldPassword: yup.string().required('Введите старый пароль'),
+    newPassword: yup.string().required('Введите новый пароль').min(6, 'Минимум 6 символов'),
+    confPassword: yup.string().required('Подтвердите новый пароль'),
 });

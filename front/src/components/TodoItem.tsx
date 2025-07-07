@@ -32,18 +32,16 @@ export default function TodoItem({ id, text, completed }: ITodoItem) {
         'line-through': completedTodo,
     });
 
-    const handleEditTitle = (data: { todoText: string }) => {
+    const handleEditTitle = async (data: { todoText: string }) => {
         if (editButton) {
-            (async () => {
-                const res = await Todos.updTodo(accessToken!, id, data.todoText, completed);
-                if (res.error) {
-                    const tokens = await Users.refresh(localStorage.refreshToken);
-                    localStorage.refreshToken = tokens.refreshToken;
-                    dispatch(setToken(tokens.accessToken));
-                    await Todos.updTodo(tokens.accessToken, id, data.todoText, completed);
-                }
-                dispatch(fetchData());
-            })();
+            const res = await Todos.updTodo(accessToken!, id, data.todoText, completed);
+            if (res.error) {
+                const tokens = await Users.refresh(localStorage.refreshToken);
+                localStorage.refreshToken = tokens.refreshToken;
+                dispatch(setToken(tokens.accessToken));
+                await Todos.updTodo(tokens.accessToken, id, data.todoText, completed);
+            }
+            dispatch(fetchData());
         }
         setEditButton((prev) => !prev);
     };

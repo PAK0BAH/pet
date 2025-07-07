@@ -19,7 +19,12 @@ export default function HomePage() {
     const dispatch = useDispatch<AppDispatch>();
     const store = useSelector((state: RootState) => state.data);
     const assetsToken = useSelector((state: RootState) => state.userData.accessToken);
-    const { register, handleSubmit, reset } = useForm({ resolver: yupResolver(schemaTodoText) });
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({ resolver: yupResolver(schemaTodoText) });
 
     const handleNewTodo = async (data: { todoText: string }) => {
         const res = await Todos.newTodo(assetsToken!, data.todoText);
@@ -40,7 +45,7 @@ export default function HomePage() {
 
     return (
         <>
-            <Box className={'flex justify-center '}>
+            <Box className={'flex justify-center'}>
                 <Box className={'w-[400px]'}>
                     <Status />
                     <Limit />
@@ -51,12 +56,12 @@ export default function HomePage() {
                     >
                         <TextField
                             sx={{ width: 500 }}
-                            id="standard-basic"
                             label="Новая задача"
                             variant="standard"
                             {...register('todoText')}
                         />
                         <Button
+                            disabled={!!errors.todoText}
                             type="submit"
                             variant="outlined"
                             sx={{

@@ -96,5 +96,12 @@
     "password": "$2a$10$DlsG7DBjQf6yVPbtKR9lKeA0H30Mjeme0I1NT3Ip4sjww2bq5pwTK",
     "age": 5,
     "createdAt": "2025-07-06T16:49:22.558Z"
+  },
+  {
+    "id": 1751878942343,
+    "email": "w@2",
+    "password": "$2a$10$A5tox/TxHHhrcdkWfw/pTOOhkfZBMU3GSuH87fbyxaMfSEKZKA8O6",
+    "age": null,
+    "createdAt": "2025-07-07T09:02:22.343Z"
   }
 ]
