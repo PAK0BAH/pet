@@ -46,13 +46,11 @@ export function ProfilePage() {
 
     useEffect(() => {
         if (apiError) {
-            const timeout = setTimeout(() => {
-                setApiError('');
-            }, 2000);
-
+            const timeout = setTimeout(() => setApiError(''), 2000);
             return () => clearTimeout(timeout);
         }
     }, [apiError]);
+
     useEffect(() => {
         (async () => {
             const res = await Users.getMe(accessToken!);
@@ -67,7 +65,9 @@ export function ProfilePage() {
                     <List>
                         <ListItem>Email - {userData.user?.email}</ListItem>
                         <ListItem>Возраст - {userData.user?.age}</ListItem>
-                        <ListItem>Дата создания - {userData.user?.createdAt}</ListItem>
+                        <ListItem>
+                            Дата создания - {userData.user?.createdAt?.slice(0, 10)}
+                        </ListItem>
                     </List>
 
                     <Box
@@ -104,11 +104,11 @@ export function ProfilePage() {
                         />
                         <Button type="submit">перепоменять пароль</Button>
                     </Box>
+                    <Fade in={!!apiError}>
+                        <Alert severity="error">{apiError}</Alert>
+                    </Fade>
                 </Box>
             </Box>
-            <Fade in={!!apiError}>
-                <Alert severity="error">{apiError}</Alert>
-            </Fade>
         </>
     );
 }

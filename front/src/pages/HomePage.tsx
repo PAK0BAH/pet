@@ -78,7 +78,7 @@ export default function HomePage() {
                         </Button>
                     </Box>
                     <Stack spacing={1}>
-                        {store.todos.map((task: ITodoItem) => (
+                        {store.todos?.map((task: ITodoItem) => (
                             <TodoItem key={task.id} {...task} />
                         ))}
                     </Stack>

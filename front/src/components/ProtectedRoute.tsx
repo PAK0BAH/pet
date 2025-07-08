@@ -13,7 +13,6 @@ export function ProtectedRoute() {
     }
 
     const handleLogout = () => {
-        localStorage.clear();
         dispatch(logout());
     };
 

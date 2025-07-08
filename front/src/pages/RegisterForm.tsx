@@ -34,15 +34,13 @@ export function RegisterForm() {
 
     useEffect(() => {
         if (apiError) {
-            const timeout = setTimeout(() => {
-                setApiError('');
-            }, 2000);
-
+            const timeout = setTimeout(() => setApiError(''), 2000);
             return () => clearTimeout(timeout);
         }
     }, [apiError]);
     return (
         <>
+            {isAuth && <Navigate to="/" />}
             <Box className={'flex justify-center'}>
                 <Box
                     className={'w-[400px] flex flex-col gap-4'}
@@ -80,6 +78,8 @@ export function RegisterForm() {
                         sx={{ height: 90 }}
                         variant="standard"
                         label="Age"
+                        error={!!errors.age}
+                        helperText={errors.age?.message}
                     />
                     <Button sx={{ textTransform: 'none' }} type="submit" className={'border'}>
                         Register
@@ -88,7 +88,6 @@ export function RegisterForm() {
                         <Alert severity="error">{apiError}</Alert>
                     </Fade>
                 </Box>
-                {isAuth && <Navigate to="/" />}
             </Box>
         </>
     );

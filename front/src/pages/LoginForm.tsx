@@ -12,7 +12,6 @@ import { schemaLogin } from '../yup/schemes';
 import { Alert, Box, Button, Fade, TextField } from '@mui/material';
 
 export function LoginForm() {
-    const [isAuth, setIsAuth] = useState(false);
     const [apiError, setApiError] = useState('');
     const dispatch = useDispatch<AppDispatch>();
     const store = useSelector((state: RootState) => state);
@@ -37,21 +36,15 @@ export function LoginForm() {
         }
     }, [apiError]);
 
-    useEffect(() => {
-        if (typeof store.userData.accessToken === typeof '') {
-            setIsAuth(true);
-        }
-    }, [store]);
-
     return (
         <>
+            {store.userData.accessToken && <Navigate to="/" />}
             <Box className={'flex justify-center'}>
                 <Box
                     className={'w-[400px] flex flex-col gap-4 '}
                     component="form"
                     onSubmit={handleSubmit(handleLogin)}
                 >
-                    {isAuth && <Navigate to="/" />}
                     <TextField {...register('email')} variant="standard" label="Email" />
                     <TextField
                         {...register('password')}

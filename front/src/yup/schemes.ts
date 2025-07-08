@@ -6,14 +6,17 @@ export const schemaLogin = yup.object().shape({
 });
 
 export const schemaRegister = yup.object().shape({
-    email: yup.string().email('Email должен быть корректным').required('ВВедите email').trim(),
+    email: yup.string().email('Email должен быть корректным').required('Введите email').trim(),
     password: yup.string().required('Создайте Пароль').min(6, 'Минимум 6 символов'),
     passwordConfirm: yup.string().required('Обязательное поле'),
     age: yup
         .number()
-        .transform((value, originalValue) => (originalValue === '' ? null : value))
         .nullable()
-        .notRequired(),
+        .notRequired()
+        .typeError('Не число')
+        .min(18, '18+')
+        .max(89, 'Верю')
+        .transform((value, originalValue) => (originalValue === '' ? null : value)),
 });
 
 export const schemaTodoText = yup.object().shape({

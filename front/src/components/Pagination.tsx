@@ -23,7 +23,7 @@ export default function Pagination() {
     };
 
     useEffect(() => {
-        if (store.todos.length === 0 && store.page > 1) {
+        if (store.todos?.length === 0 && store.page > 1) {
             dispatch(changePage(store.page - 1));
             dispatch(fetchData());
         }
